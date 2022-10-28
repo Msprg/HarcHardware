@@ -20,6 +20,7 @@ public final class IrFlipperZero extends IrSerial<LocalSerialPortBuffered> imple
     private static final LocalSerialPort.Parity parity = LocalSerialPort.Parity.NONE;
     private int captureMaxSize = DEFAULT_CAPTURE_MAXSIZE;
     private int SerialTimeout = 1000;
+    private int FLIPPER_IR_RX_TOUT = 150000; //150 000 is the IR timeout of the IR RX RAW
     
     
     public IrFlipperZero() throws IOException {
@@ -168,7 +169,7 @@ public final class IrFlipperZero extends IrSerial<LocalSerialPortBuffered> imple
                 String rawSequence = serialPort.readString(true);
                 assert rawSequence != null;
                 String[] rawSeqArr = rawSequence.split("\\s* \\s*");
-                if (rawSeqArr.length % 2 == 1) rawSequence = rawSequence.concat("0");
+                if (rawSeqArr.length % 2 == 1) rawSequence = rawSequence.concat(String.valueOf(FLIPPER_IR_RX_TOUT));
                 return new IrSequence(rawSequence);
             } else if (buff.matches(Pattern.compile("(\\w)+,?\\s(A:0x..)+,?\\s(C:0x..)+\\s?R?", Pattern.CASE_INSENSITIVE).toString())) {
                 System.out.println("[TESTING] An already decoded sequence has been detected:");
