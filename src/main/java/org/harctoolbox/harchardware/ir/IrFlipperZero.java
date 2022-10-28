@@ -144,14 +144,14 @@ public final class IrFlipperZero extends IrSerial<LocalSerialPortBuffered> imple
     
     private void getToReceiveReadyState() throws IOException, HarcHardwareException {
         sendInterrupts(2);  //Send itr 2 times, as it may be necessary in come circumstances to fully exit.
-        serialPort.sendBytes("ir rx\r".getBytes());
+        serialPort.sendBytes("ir rx raw\r".getBytes());
         System.out.println("[TESTING] sent ir rx cmd");
         String buff = serialPort.readString(true);
         while (buff != null) {
             switch (buff) {
                 case "Other application is running, close it first":
                     throw new HarcHardwareException("Flipper device is busy! Exit to home screen or reboot it!");
-                case "Receiving INFRARED...":
+                case "Receiving RAW INFRARED...":
                     this.clearIncomingDataBuffer();
                     System.out.println("[TESTING] Device is in a FULLY READY state!");
                     return;
